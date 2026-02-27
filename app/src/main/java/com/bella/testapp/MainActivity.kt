@@ -1,12 +1,21 @@
 package com.bella.testapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+    lateinit var test1: TextView;
+    lateinit var test2: TextView;
+    lateinit var test3: TextView;
+    lateinit var test4: TextView;
+    lateinit var test5: TextView;
+    lateinit var test6: TextView;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -17,8 +26,36 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        initView();
+        initEvent();
+
+
+    }
+
+    fun initView() {
+        test1 = findViewById(R.id.test1);
+        test2 = findViewById(R.id.test2);
+        test3 = findViewById(R.id.test3);
+        test4 = findViewById(R.id.test4);
+        test5 = findViewById(R.id.test5);
+        test6 = findViewById(R.id.test6);
+
+        test1.setText("鼠标Grid选中效果")
+        test2.setText("鼠标List选中效果")
 
 
 
     }
+
+    fun initEvent(){
+        test1.setOnClickListener({
+            startActivity(Intent(this,GridListActivity::class.java))
+        })
+
+        test2.setOnClickListener({
+            startActivity(Intent(this,ListTestActivity::class.java))
+        })
+    }
+
+
 }
