@@ -5,11 +5,6 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.widget.GridLayout
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -38,7 +33,7 @@ class GridListActivity : AppCompatActivity() {
 
         // 添加假数据
         repeat(40) {
-            val item = layoutInflater.inflate(R.layout.item_layout, grid, false)
+            val item = layoutInflater.inflate(R.layout.item_grid, grid, false)
             grid.addView(item)
         }
 
@@ -52,7 +47,7 @@ class GridListActivity : AppCompatActivity() {
         selectionView.setOnTouchListener { _, event ->
 
             val isMouse = event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE
-            val isLeft = true;// event.buttonState and MotionEvent.BUTTON_PRIMARY != 0
+            val isLeft = (event.buttonState  === 0)
 
             Log.w("Grid","setupMouseSelection isMouse: "+isMouse + " ,event.actionMasked "+event.actionMasked  + " ,BUTTON_PRIMARY "+MotionEvent.BUTTON_PRIMARY)
 
@@ -97,8 +92,6 @@ class GridListActivity : AppCompatActivity() {
 
             val location = IntArray(2)
             selectionView.getLocationInWindow(location)
-
-            Log.w("Grid","updateSelection: "+grid.childCount + "  "+location[0]   + "  "+location[1]);
 
             childRect.offset(-location[0], -location[1])
 
