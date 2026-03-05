@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:transitionGroup="true">
+
+
+    <TextView
+        android:id="@+id/txtFromGallery"
+        android:text="@string/app_name"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="64dp"
+        android:background="@drawable/textview_bg"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="24dp"
+        android:textSize="12sp"
+        android:layout_gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/wallpaper_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="?android:textColorTertiary"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="96dp"
+        android:layout_marginTop="32dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/loading_indicator"
+        style="@android:style/Widget.DeviceDefault.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="75dp"
+        android:indeterminate="true" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

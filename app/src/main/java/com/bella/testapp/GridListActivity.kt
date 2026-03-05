@@ -16,6 +16,7 @@ class GridListActivity : AppCompatActivity() {
     private lateinit var grid: AutoSpacingGridLayout
     private lateinit var selectionView: SelectionView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

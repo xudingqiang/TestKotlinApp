@@ -1,5 +1,6 @@
 package com.bella.testapp
 
+import android.app.WallpaperManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
@@ -29,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         initView();
         initEvent();
 
-
     }
 
     fun initView() {
@@ -50,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     fun initEvent(){
         test1.setOnClickListener({
             startActivity(Intent(this,GridListActivity::class.java))
+//            val intent =  Intent(Intent.ACTION_PICK);
+//            intent.setType("image/*");
+//            startActivity( intent);
         })
 
         test2.setOnClickListener({

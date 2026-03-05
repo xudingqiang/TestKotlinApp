@@ -15,8 +15,11 @@
         android:src="@android:drawable/ic_menu_gallery"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginLeft="16dp"
         android:text="file.jpg"
         android:textSize="12sp"/>
 

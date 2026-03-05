@@ -4,6 +4,12 @@
     android:id="@+id/main"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/test"
+        android:text="111"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
     <androidx.core.widget.NestedScrollView
