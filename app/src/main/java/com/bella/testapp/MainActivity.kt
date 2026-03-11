@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         test1.setText("鼠标Grid选中效果")
         test2.setText("鼠标List选中效果")
+        test3.setText("RecyclerviewSelection效果")
+        test4.setText("ImageViewTest")
 
 
 
@@ -57,6 +59,14 @@ class MainActivity : AppCompatActivity() {
 
         test2.setOnClickListener({
             startActivity(Intent(this,ListTestActivity::class.java))
+        })
+
+        test3.setOnClickListener({
+            startActivity(Intent(this, RecyclerviewSelectionActivity::class.java))
+        })
+
+        test4.setOnClickListener({
+            startActivity(Intent(this, ImageViewTestActivity::class.java))
         })
     }
 

@@ -1,11 +1,15 @@
 package com.bella.testapp
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Bundle
 import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -26,14 +30,15 @@ import com.bella.testapp.view.SelectionView
 class ListTestActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var selectionView: SelectionView
-    private lateinit var tracker: SelectionTracker<Long>
     private lateinit var adapter: GridAdapter
-
+    private lateinit var textView: TextView
+    private var data = mutableListOf<Item>()
 
     companion object {
         private var isScroll = 0
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,10 +51,11 @@ class ListTestActivity : AppCompatActivity() {
 
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         selectionView = findViewById(R.id.selectionView)
-
+        textView = findViewById<TextView>(R.id.textView)
+        textView.text =  "测试点击"
 
 //        val data = List(20) { "Item $it" }
-        val data = mutableListOf<Item>()
+        data = mutableListOf<Item>()
         for (i in 0..50) {
             data.add(Item(i.toLong(), "Item $i"))
         }
@@ -63,47 +69,113 @@ class ListTestActivity : AppCompatActivity() {
         recyclerView.isNestedScrollingEnabled = false
 
 
-        tracker = SelectionTracker.Builder(
-            "mySelection",
-            recyclerView,
-            MyItemKeyProvider(adapter),
-            MyItemDetailsLookup(recyclerView),
-            StorageStrategy.createLongStorage()
-        ).withSelectionPredicate(
-            SelectionPredicates.createSelectAnything()
-        ).build()
-
-        adapter.tracker = tracker
 
         setupMouseSelection()
+
+        textView.setOnClickListener({
+            val selectedPositions = mutableListOf<Int>()
+
+            for (i in 0 until recyclerView.childCount) {
+
+                val child = recyclerView.getChildAt(i)
+
+                if (child.isSelected) {
+                    val holder = recyclerView.getChildViewHolder(child)
+                    val position = i
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        selectedPositions.add(position)
+                    }
+                }
+            }
+
+            val result = selectedPositions.joinToString(",")
+
+            Log.w("bellaTest", "222222222this is click  "+result)
+            textView.setText("选中  "+result)
+        })
+
     }
 
-    private var dragging = false
+    private fun isInsideView(view: View, x: Float, y: Float): Boolean {
+
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+
+        val left = location[0]
+        val top = location[1]
+        val right = left + view.width
+        val bottom = top + view.height
+
+        return x >= left && x <= right && y >= top && y <= bottom
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+            if (event?.action == MotionEvent.ACTION_MOVE &&
+                event?.buttonState == MotionEvent.BUTTON_PRIMARY
+            ) {
+                Log.d("Grid", "action : "+ event.action + "  ,buttonState "+event.buttonState  + " actionButton  "+event.actionButton)
+                selectionView.update(event.x, event.y)
+                updateSelection()
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    override fun onGenericMotionEvent(event: MotionEvent): Boolean {
+        if(isInsideView(textView,event.rawX,event.rawY)){
+
+        }else{
+            if (event?.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+                if (event?.action == MotionEvent.ACTION_BUTTON_PRESS  &&  event.actionButton == MotionEvent.BUTTON_PRIMARY
+                ) {
+                    Log.d("Grid", "鼠标左键按下  ")
+                    clearSelection()
+                    selectionView.start(event.x, event.y)
+                }
+
+                if (event?.action == MotionEvent.ACTION_BUTTON_RELEASE &&  event.actionButton == MotionEvent.BUTTON_PRIMARY
+                ) {
+                    Log.d("Grid", "鼠标左键释放  ")
+                    selectionView.stop()
+                }
+            }
+        }
+
+        return super.onGenericMotionEvent(event)
+    }
 
     private fun setupMouseSelection() {
 
-        selectionView.setOnGenericMotionListener { _, event ->
-            isScroll = event.actionMasked
-            if (event.source and InputDevice.SOURCE_MOUSE == InputDevice.SOURCE_MOUSE) {
-
-                val isMouse = event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE
-                val isLeft = (event.buttonState  === MotionEvent.BUTTON_PRIMARY)
-
-                Log.d("Grid", "event.actionMasked  "+event.actionMasked  +",event.action " +event.action  +",event.buttonState "+event.buttonState  + ",isMouse "+isMouse + ",isLeft "+isLeft)
-
-
-            }
-
-            Log.w("Grid","setupMouseSelection isScroll: "+isScroll);
-            false
-        }
+//        selectionView.setOnGenericMotionListener { _, event ->
+//            isScroll = event.actionMasked
+//            if (event.source and InputDevice.SOURCE_MOUSE == InputDevice.SOURCE_MOUSE) {
+//
+//                val isMouse = event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE
+//                val isLeft = (event.buttonState === MotionEvent.BUTTON_PRIMARY)
+//
+//                Log.d(
+//                    "Grid",
+//                    "event.actionMasked  " + event.actionMasked + ",event.action " + event.action + ",event.buttonState " + event.buttonState + ",isMouse " + isMouse + ",isLeft " + isLeft
+//                )
+//
+//
+//            }
+//
+//            Log.w("Grid", "setupMouseSelection isScroll: " + isScroll);
+//            false
+//        }
 
         selectionView.setOnTouchListener { _, event ->
 
             val isMouse = event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE
-            val isLeft = (event.buttonState  === 0)
+            val isLeft = (event.buttonState === 0)
 
-            Log.w("Grid","setupMouseSelection isScroll: "+isScroll + " ,event.actionMasked "+event.deviceId  + " ,event.buttonState  "+event.buttonState )
+            Log.w(
+                "Grid",
+                "setupMouseSelection isScroll: " + isScroll + " ,event.actionMasked " + event.deviceId + " ,event.buttonState  " + event.buttonState
+            )
 //            if(isScroll){
 //                 false;
 //            }

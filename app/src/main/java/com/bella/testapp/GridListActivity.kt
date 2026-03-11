@@ -39,12 +39,41 @@ class GridListActivity : AppCompatActivity() {
         }
 
         setupMouseSelection()
-
     }
 
 
-    private fun setupMouseSelection() {
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+            if (event?.action == MotionEvent.ACTION_MOVE &&
+                event?.buttonState == MotionEvent.BUTTON_PRIMARY
+            ) {
+                Log.d("Grid", "action : "+ event.action + "  ,buttonState "+event.buttonState  + " actionButton  "+event.actionButton)
+                selectionView.update(event.x, event.y)
+                updateSelection()
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
 
+    override fun onGenericMotionEvent(event: MotionEvent): Boolean {
+        if (event?.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+            if (event?.action == MotionEvent.ACTION_BUTTON_PRESS  &&  event.actionButton == MotionEvent.BUTTON_PRIMARY
+            ) {
+                Log.d("Grid", "鼠标左键按下")
+                clearSelection()
+                selectionView.start(event.x, event.y)
+            }
+
+            if (event?.action == MotionEvent.ACTION_BUTTON_RELEASE &&  event.actionButton == MotionEvent.BUTTON_PRIMARY
+            ) {
+                Log.d("Grid", "鼠标左键释放")
+                selectionView.stop()
+            }
+        }
+        return super.onGenericMotionEvent(event)
+    }
+
+    private fun setupMouseSelection() {
         selectionView.setOnTouchListener { _, event ->
 
             val isMouse = event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE
