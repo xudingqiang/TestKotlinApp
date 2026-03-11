@@ -20,6 +20,7 @@ android {
         externalNativeBuild {
             cmake {
                 // 正确写法：用 assignment 或 +=
+                cFlags += ["-std=c11"]
                 cppFlags += ["-std=c++17"]
             }
         }

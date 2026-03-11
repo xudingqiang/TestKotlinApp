@@ -7,7 +7,7 @@
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_bella_testapp_JniTestActivity_stringFromJNI(
+Java_com_bella_testapp_JniTestActivity_stringFromJNICPP(
         JNIEnv* env,
         jobject /* this */) {
     std::string hello = "Hello from C++ JNI!";

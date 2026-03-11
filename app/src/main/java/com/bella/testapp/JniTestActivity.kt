@@ -14,11 +14,13 @@ class JniTestActivity : AppCompatActivity() {
 
     companion object {
         init {
+            System.loadLibrary("native-c")
             System.loadLibrary("native-lib")
         }
     }
 
-    external fun stringFromJNI(): String
+    external fun stringFromJNIC(): String
+    external fun stringFromJNICPP(): String
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +35,10 @@ class JniTestActivity : AppCompatActivity() {
 
         txtTest = findViewById(R.id.txtTest);
 
-        val result = stringFromJNI()
-        Log.w("bella","result:  "+result)
-        txtTest?.text = result
+        val resultC = stringFromJNIC()
+        val resultCPP = stringFromJNICPP()
+        Log.w("bella","result:  "+resultC  + "  "+resultCPP)
+        txtTest?.text = resultC + " ---   "+resultCPP
 
     }
 }
