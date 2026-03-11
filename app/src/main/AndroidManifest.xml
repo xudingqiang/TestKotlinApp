@@ -15,6 +15,9 @@
         tools:ignore="HardcodedDebugMode"
         tools:targetApi="31">
         <activity
+            android:name=".JniTestActivity"
+            android:exported="false" />
+        <activity
             android:name=".ImageViewTestActivity"
             android:exported="false" />
         <activity
