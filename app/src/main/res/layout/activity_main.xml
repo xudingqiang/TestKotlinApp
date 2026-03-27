@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
@@ -14,11 +15,28 @@
         android:layout_height="wrap_content">
 
 
+        <com.fde.baselib.view.CustomTitleBar
+            android:id="@+id/customTitleBar"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="wrap_content"/>
+
+
+        <EditText
+            android:id="@+id/editTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            app:layout_constraintTop_toBottomOf="@id/customTitleBar"
+            />
+
+
+
     <TextView
         android:id="@+id/test1"
         android:layout_width="match_parent"
         style="@style/item_textview"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTest"
         android:layout_height="wrap_content"/>
 
 
@@ -70,6 +88,16 @@
         android:layout_width="match_parent"
         style="@style/item_textview"
         app:layout_constraintTop_toBottomOf="@id/test7"
+        android:layout_height="wrap_content"/>
+
+
+    <ImageView
+        android:id="@+id/imgLoading"
+        android:layout_width="wrap_content"
+        android:layout_margin="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/test8"
         android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
