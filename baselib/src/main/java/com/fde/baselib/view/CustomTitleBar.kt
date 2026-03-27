@@ -58,7 +58,19 @@ class CustomTitleBar @JvmOverloads constructor(
         imgClose.setOnClickListener { listener.onCloseClick() }
     }
 
-    fun setVisible( type : Type,visible: Boolean) {
+    fun setButtonBackground(type : Type,resId : Int) {
+        when(type){
+            Type.LEFT -> imgLeft.setImageResource(resId)
+            Type.OPTION -> imgImport.setImageResource(resId)
+            Type.FULLSCREEN -> imgFullscreen.setImageResource(resId)
+            Type.MINIMIZE -> imgMinimize.setImageResource(resId)
+            Type.MAXIMIZE -> imgMaximize.setImageResource(resId)
+            Type.CLOSE -> imgClose.setImageResource(resId)
+            Type.TITLE -> {}
+        }
+    }
+
+    fun setViewVisible( type : Type,visible: Boolean) {
         when(type){
             Type.LEFT -> imgLeft.visibility = if (visible) VISIBLE else GONE
             Type.TITLE -> txtTitle.visibility = if (visible) VISIBLE else GONE

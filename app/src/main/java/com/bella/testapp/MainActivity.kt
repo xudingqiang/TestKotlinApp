@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var test5: TextView;
     lateinit var test6: TextView;
     lateinit var editTest: EditText;
+    lateinit var titleBar: CustomTitleBar;
     lateinit var imgLoading: ImageView;
     lateinit var appTaskController : AppTaskControllerProxy ;
 
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 //        animDrawablePlayer = AnimFactory.loading(this, imgLoading)
 //        animDrawablePlayer.start()
 
-        val titleBar = findViewById<CustomTitleBar>(R.id.customTitleBar)
+        titleBar = findViewById<CustomTitleBar>(R.id.customTitleBar)
         titleBar.setTitle("我的应用标题")
 //        titleBar.setVisible(CustomTitleBar.Type.OPTION,true)
         titleBar.setOnButtonClickListener(object : CustomTitleBar.OnButtonClickListener {
@@ -141,8 +142,8 @@ class MainActivity : AppCompatActivity() {
                     windowingMode: Int,
                     isSystemBarVisible: Boolean
                 ) {
-//                    mWindowingMode.value = windowingMode
-//                    mIsSystemBarVisible.value  =isSystemBarVisible
+                    titleBar.setButtonBackground(CustomTitleBar.Type.MAXIMIZE,if(windowingMode == 5) com.fde.baselib.R.drawable.icon_maximize else com.fde.baselib.R.drawable.icon_exitmaximize)
+                    titleBar.setButtonBackground(CustomTitleBar.Type.FULLSCREEN,if(isSystemBarVisible) com.fde.baselib.R.drawable.icon_fullscreen else com.fde.baselib.R.drawable.icon_exitfullscreen)
                 }
 
             }
