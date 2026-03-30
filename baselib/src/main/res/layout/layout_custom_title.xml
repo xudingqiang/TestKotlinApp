@@ -31,7 +31,17 @@
         android:tag="drag"
         android:id="@+id/toolBar"
         android:layout_toRightOf="@id/txtTitle"
-        android:layout_toLeftOf="@id/imgImport"/>
+        android:layout_toLeftOf="@id/imgImport">
+
+        <RelativeLayout
+            android:id="@+id/layoutRootView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </RelativeLayout>
+
+
+    </Toolbar>
 
 
     <ImageView

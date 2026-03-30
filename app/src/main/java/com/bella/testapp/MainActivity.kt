@@ -1,7 +1,9 @@
 package com.bella.testapp
 
 import android.app.WallpaperManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Rect
 import android.openfde.AppTaskControllerProxy
 import android.openfde.AppTaskStatusListener
@@ -11,9 +13,13 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ListPopupWindow
+import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.text.font.FontVariation
@@ -37,13 +43,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var appTaskController : AppTaskControllerProxy ;
 
     lateinit var animDrawablePlayer: AnimDrawablePlayer ;
+    lateinit var context : Context
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
+        context = this
         appTaskController = AppTaskControllerProxy.create();
 
 
@@ -79,6 +86,15 @@ class MainActivity : AppCompatActivity() {
         titleBar = findViewById<CustomTitleBar>(R.id.customTitleBar)
         titleBar.setTitle("我的应用标题")
 //        titleBar.setVisible(CustomTitleBar.Type.OPTION,true)
+
+        val textView = TextView(this).apply {
+            text = "TEST 的TextView"
+            textSize = 16f
+            setTextColor(Color.BLACK)
+        }
+//        titleBar.addChildView(textView)
+
+
         titleBar.setOnButtonClickListener(object : CustomTitleBar.OnButtonClickListener {
             override fun onLeftClick() {
                 finish() // 左上角返回
@@ -94,7 +110,37 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onImportClick() {
+//                val popupMenu = PopupMenu(context, titleBar.getButton(CustomTitleBar.Type.OPTION))
+//                popupMenu.menu.add("选项1")
+//                popupMenu.menu.add("选项2")
+//                popupMenu.menu.add("选项3")
+//                popupMenu.setOnMenuItemClickListener { item ->
+//                    when (item.title) {
+//                        "选项1" -> { /* TODO */ }
+//                        "选项2" -> { /* TODO */ }
+//                    }
+//                    true
+//                }
+//                popupMenu.show()
 
+                val listPopupWindow = ListPopupWindow(context)
+
+                val data = listOf("选项A", "选项B", "选项C")
+                val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, data)
+
+                listPopupWindow.anchorView = titleBar.getButton(CustomTitleBar.Type.OPTION)
+                listPopupWindow.setAdapter(adapter)
+                listPopupWindow.width = 150
+
+                listPopupWindow.setOnItemClickListener { _, _, position, _ ->
+                    val item = data[position]
+                    Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                    listPopupWindow.dismiss()
+                }
+
+                titleBar.getButton(CustomTitleBar.Type.OPTION).setOnClickListener {
+                    listPopupWindow.show()
+                }
             }
 
             override fun onMinimizeClick() {

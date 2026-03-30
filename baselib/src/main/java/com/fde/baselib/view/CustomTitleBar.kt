@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toolbar
 import com.fde.baselib.R
 
 class CustomTitleBar @JvmOverloads constructor(
@@ -22,6 +23,8 @@ class CustomTitleBar @JvmOverloads constructor(
     private val imgMinimize: ImageView
     private val imgMaximize: ImageView
     private val imgClose: ImageView
+    private val toolBar: Toolbar
+    private val layoutRootView: RelativeLayout
 
     enum class Type {
         LEFT,
@@ -41,6 +44,8 @@ class CustomTitleBar @JvmOverloads constructor(
         imgMinimize = findViewById(R.id.imgMinimize)
         imgMaximize = findViewById(R.id.imgMaximize)
         imgClose = findViewById(R.id.imgClose)
+        toolBar = findViewById(R.id.toolBar)
+        layoutRootView = findViewById(R.id.layoutRootView)
     }
 
     /** 设置标题文字 */
@@ -56,6 +61,22 @@ class CustomTitleBar @JvmOverloads constructor(
         imgMinimize.setOnClickListener { listener.onMinimizeClick() }
         imgMaximize.setOnClickListener { listener.onMaximizeClick() }
         imgClose.setOnClickListener { listener.onCloseClick() }
+    }
+
+    fun getButton(type : Type) : View {
+        return when(type){
+            Type.LEFT -> imgLeft
+            Type.TITLE -> txtTitle
+            Type.OPTION -> imgImport
+            Type.FULLSCREEN -> imgFullscreen
+            Type.MINIMIZE -> imgMinimize
+            Type.MAXIMIZE -> imgMaximize
+            Type.CLOSE -> imgClose
+        }
+    }
+
+    fun addChildView(view : View) {
+        layoutRootView.addView(view)
     }
 
     fun setButtonBackground(type : Type,resId : Int) {
