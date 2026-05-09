@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bella.testapp.view.MyGLSurfaceView
 
 class JniTestActivity : AppCompatActivity() {
     var txtTest: TextView? = null
@@ -26,19 +27,20 @@ class JniTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_jni_test)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+//        setContentView(R.layout.activity_jni_test)
+        setContentView( MyGLSurfaceView(this));
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
 
-        txtTest = findViewById(R.id.txtTest);
-
+//        txtTest = findViewById(R.id.txtTest);
+//
         val resultC = stringFromJNIC()
         val resultCPP = stringFromJNICPP()
         Log.w("bella","result:  "+resultC  + "  "+resultCPP)
-        txtTest?.text = resultC + " ---   "+resultCPP
+//        txtTest?.text = resultC + " ---   "+resultCPP
 
     }
 }
