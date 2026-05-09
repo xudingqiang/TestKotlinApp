@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="title_icon_padding">8dp</dimen>
+    <dimen name="title_icon_margin">6dp</dimen>
+</resources>
