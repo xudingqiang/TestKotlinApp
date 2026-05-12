@@ -9,12 +9,12 @@
 
     <ImageView
         android:id="@+id/imgLeft"
+        style="@style/CaptionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
-        android:background="@drawable/img_bg"
         android:src="@drawable/icon_left" />
 
 
@@ -44,66 +44,11 @@
     </Toolbar>
 
 
-    <ImageView
-        android:id="@+id/imgImport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical|end"
-        android:padding="@dimen/title_icon_padding"
-        android:layout_marginRight="@dimen/title_icon_margin"
-        android:background="@drawable/img_bg"
-        android:layout_toLeftOf="@id/imgFullscreen"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/icon_options" />
-
-    <ImageView
-        android:id="@+id/imgFullscreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/title_icon_padding"
-        android:layout_marginRight="@dimen/title_icon_margin"
-        android:layout_gravity="center_vertical|end"
-        android:layout_toLeftOf="@id/imgMinimize"
-        android:background="@drawable/img_bg"
-        android:src="@drawable/icon_fullscreen" />
-
-    <ImageView
-        android:id="@+id/imgMinimize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/title_icon_padding"
-        android:layout_marginRight="@dimen/title_icon_margin"
-        android:layout_gravity="center_vertical|end"
-        android:layout_toLeftOf="@id/imgMaximize"
-        android:background="@drawable/img_bg"
-        android:src="@drawable/icon_minimize" />
-
-    <ImageView
-        android:id="@+id/imgMaximize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/title_icon_padding"
-        android:layout_marginRight="@dimen/title_icon_margin"
-        android:layout_gravity="center_vertical|end"
-        android:layout_toLeftOf="@id/imgClose"
-        android:background="@drawable/img_bg"
-        android:src="@drawable/icon_maximize" />
-
-    <ImageView
-        android:id="@+id/imgClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="6dp"
-        android:padding="@dimen/title_icon_padding"
-        android:background="@drawable/img_bg"
-        android:src="@drawable/icon_close" />
+   <include
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:layout_alignParentRight="true"
+       layout="@layout/layout_custom_title_right" />
 
 
 </RelativeLayout>

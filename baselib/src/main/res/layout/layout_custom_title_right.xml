@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+
+    <ImageView
+        style="@style/CaptionButtonStyle"
+        android:id="@+id/imgImport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/imgFullscreen"
+        android:src="@drawable/icon_options" />
+
+    <ImageView
+        style="@style/CaptionButtonStyle"
+        android:id="@+id/imgFullscreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/imgMinimize"
+        android:src="@drawable/icon_fullscreen" />
+
+    <ImageView
+        style="@style/CaptionButtonStyle"
+        android:id="@+id/imgMinimize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/imgMaximize"
+        android:src="@drawable/icon_minimize" />
+
+    <ImageView
+        style="@style/CaptionButtonStyle"
+        android:id="@+id/imgMaximize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/imgClose"
+        android:src="@drawable/icon_maximize" />
+
+    <ImageView
+        style="@style/CaptionButtonStyle"
+        android:id="@+id/imgClose"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/icon_close" />
+
+
+</RelativeLayout>

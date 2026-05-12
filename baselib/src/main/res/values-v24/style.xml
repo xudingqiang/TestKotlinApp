@@ -6,8 +6,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">@dimen/title_icon_margin</item>
         <item name="android:padding">@dimen/title_icon_padding</item>
+        <item name="android:pointerIcon">hand</item>
         <item name="android:background">@drawable/img_bg</item>
         <item name="android:layout_gravity">center_vertical|end</item>
     </style>
-
 </resources>

@@ -61,6 +61,7 @@ class CustomTitleBar @JvmOverloads constructor(
         imgMinimize.setOnClickListener { listener.onMinimizeClick() }
         imgMaximize.setOnClickListener { listener.onMaximizeClick() }
         imgClose.setOnClickListener { listener.onCloseClick() }
+
     }
 
     fun getButton(type : Type) : View {
