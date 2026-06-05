@@ -18,9 +18,12 @@ import com.bella.testapp.adapter.SelectionAdapter
 import com.bella.testapp.bean.Item
 import com.bella.testapp.list.MyItemDetailsLookup
 import com.bella.testapp.list.MyItemKeyProvider
+import com.fde.baselib.view.CustomScrollBarView
+import com.fde.baselib.view.RecyclerScrollBinder
 
 class RecyclerviewSelectionActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
+    private lateinit var customScrollBarView: CustomScrollBarView
     private lateinit var tracker: SelectionTracker<Long>
     private lateinit var adapter: SelectionAdapter
     private var data = mutableListOf<Item>()
@@ -36,6 +39,9 @@ class RecyclerviewSelectionActivity : AppCompatActivity() {
         }
 
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        customScrollBarView = findViewById<CustomScrollBarView>(R.id.scrollBar)
+
+        RecyclerScrollBinder.bind(recyclerView, customScrollBarView);
         data = mutableListOf<Item>()
         for (i in 0..50) {
             data.add(Item(i.toLong(), "Item $i"))
@@ -61,9 +67,6 @@ class RecyclerviewSelectionActivity : AppCompatActivity() {
 
 
         adapter.tracker = tracker
-
-
-      
 
 
         recyclerView.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {

@@ -224,6 +224,14 @@ class MainActivity : AppCompatActivity() {
 //            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 //            startActivityForResult(intent, 1)
         })
+
+        test6.setText("获取焦点")
+        test6.isFocusable = true
+        test6.isFocusableInTouchMode = true
+        test6.setOnClickListener({
+            test6.requestFocus();
+
+        })
     }
 
     fun  checkMultiWindowMode() {
@@ -235,5 +243,7 @@ class MainActivity : AppCompatActivity() {
         super.onMultiWindowModeChanged(isInMultiWindowMode)
         Log.d("SplitScreen", "onMultiWindowModeChanged: $isInMultiWindowMode")
     }
+
+
 
 }
