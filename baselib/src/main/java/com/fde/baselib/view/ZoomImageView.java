@@ -1,12 +1,13 @@
 package com.fde.baselib.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 
-public class ZoomImageView extends ImageView {
+public class ZoomImageView extends androidx.appcompat.widget.AppCompatImageView {
     private ScaleGestureDetector scaleGestureDetector;
     private float scaleFactor = 1.0f;
 
@@ -35,17 +36,19 @@ public class ZoomImageView extends ImageView {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY && event.getAction() == MotionEvent.ACTION_SCROLL) {
-            float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
-            if (vScroll < 0) {
-                scaleFactor *= 1.1f;
-            } else {
-                scaleFactor *= 0.9f;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            if (event.getButtonState() == MotionEvent.BUTTON_SECONDARY && event.getAction() == MotionEvent.ACTION_SCROLL) {
+                float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                if (vScroll < 0) {
+                    scaleFactor *= 1.1f;
+                } else {
+                    scaleFactor *= 0.9f;
+                }
+                scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
+                setScaleX(scaleFactor);
+                setScaleY(scaleFactor);
+                return true;
             }
-            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
-            setScaleX(scaleFactor);
-            setScaleY(scaleFactor);
-            return true;
         }
         return super.onGenericMotionEvent(event);
     }

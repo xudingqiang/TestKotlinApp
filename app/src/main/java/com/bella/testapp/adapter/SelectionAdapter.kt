@@ -5,12 +5,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.bella.testapp.R
 import com.bella.testapp.bean.Item
+import com.bumptech.glide.Glide
 
 class SelectionAdapter(
     private val list: List<Item>,
@@ -26,9 +28,11 @@ class SelectionAdapter(
     inner class GridViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         var textView : TextView;
+        var imageView : ImageView;
 
         init {
             textView = view.findViewById<TextView>(R.id.textView)
+            imageView = view.findViewById<ImageView>(R.id.imageView)
             view.setOnClickListener {
                 onItemClick(list[adapterPosition])
             }
@@ -66,6 +70,16 @@ class SelectionAdapter(
     override fun onBindViewHolder(holder: GridViewHolder, position: Int) {
         val item = list[position]
         holder.textView.text = item.name
+
+        Glide.with(holder.imageView)
+            .load(R.mipmap.ic_launcher)
+            .error(R.mipmap.ic_launcher)
+            .thumbnail(0.1f) // ⭐ 首帧快
+            .dontAnimate()
+            .centerCrop()
+            .into(holder.imageView);
+
+
         if (tracker?.isSelected(item.id) == true) {
             holder.textView.setBackgroundColor(Color.LTGRAY)
         } else {

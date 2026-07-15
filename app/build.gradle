@@ -88,6 +88,7 @@ dependencies {
     debugImplementation libs.androidx.ui.test.manifest
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation project(':baselib')
+    implementation("com.github.bumptech.glide:glide:5.0.7")
     compileOnly(files("libs/openfde_sdk.jar"))
     compileOnly(files("libs/cling-core-2.1.2.jar"))
     compileOnly(files("libs/cling-support-2.1.2.jar"))

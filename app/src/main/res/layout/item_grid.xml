@@ -5,11 +5,11 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="8dp"
-    android:layout_margin="16dp"
     android:clickable="true"
     android:background="@drawable/item_selector_old">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@android:drawable/ic_menu_gallery"/>

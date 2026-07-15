@@ -1,6 +1,7 @@
 package com.bella.testapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Toast
@@ -28,6 +29,8 @@ class RecyclerviewSelectionActivity : AppCompatActivity() {
     private lateinit var adapter: SelectionAdapter
     private var data = mutableListOf<Item>()
 
+    private lateinit var binder : RecyclerScrollBinder;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,19 +44,48 @@ class RecyclerviewSelectionActivity : AppCompatActivity() {
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         customScrollBarView = findViewById<CustomScrollBarView>(R.id.scrollBar)
 
-        RecyclerScrollBinder.bind(recyclerView, customScrollBarView);
+        recyclerView.setHasFixedSize(true);
+        val pool = recyclerView.getRecycledViewPool();
+        pool.setMaxRecycledViews(0, 200); // 默认是 5，加大到 15~20 避免快速滑动时重新创建 View
+        recyclerView.setRecycledViewPool(pool);
+        // 2. 适当增加预加载缓存数量（默认是 2）
+        recyclerView.setItemViewCacheSize(5);
+
+//        RecyclerScrollBinder binder =
+//        new RecyclerScrollBinder();
+
+
+
+//        RecyclerScrollBinder.bind(recyclerView, customScrollBarView);
+//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                val range = recyclerView.computeVerticalScrollRange()
+//                val offset = recyclerView.computeVerticalScrollOffset()
+//                val extent = recyclerView.computeVerticalScrollExtent()
+//
+//                val progress = offset.toFloat() / (range - extent)
+//
+//                Log.w(
+//                    "RecyclerScrollBinder",
+//                    "progress:$progress, offset $offset, extent $extent, range $range"
+//                )
+//            }
+//        })
+
         data = mutableListOf<Item>()
-        for (i in 0..50) {
+        for (i in 0..100000) {
             data.add(Item(i.toLong(), "Item $i"))
         }
 
-        recyclerView.layoutManager = GridLayoutManager(this,7)
+        recyclerView.layoutManager = GridLayoutManager(this,14)
         adapter = SelectionAdapter(data) {
             Toast.makeText(this, "点击: $it", Toast.LENGTH_SHORT).show()
         }
+
         recyclerView.adapter = adapter
         recyclerView.isNestedScrollingEnabled = false
-
+        binder = RecyclerScrollBinder();
+        binder.bind(recyclerView,customScrollBarView)
 
         tracker = SelectionTracker.Builder(
             "mySelection",
@@ -99,4 +131,13 @@ class RecyclerviewSelectionActivity : AppCompatActivity() {
         })
 
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(binder !=null){
+            binder.unbind();
+        }
+    }
+
 }

@@ -5,9 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
+import android.net.Uri
 import android.openfde.AppTaskControllerProxy
 import android.openfde.AppTaskStatusListener
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
@@ -23,6 +27,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.text.font.FontVariation
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.fde.baselib.Animation.AnimDrawablePlayer
@@ -51,7 +56,26 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         context = this
-        appTaskController = AppTaskControllerProxy.create();
+//        appTaskController = AppTaskControllerProxy.create();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                    data = Uri.parse("package:$packageName")
+                }
+                startActivity(intent)
+            }
+        } else {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(
+//                    Manifest.permission.READ_EXTERNAL_STORAGE,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                ),
+//                REQUEST_CODE
+//            )
+        }
         
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -180,20 +204,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initEvent(){
-        appTaskController?.initCustomCaption(
-            WeakReference(this),
-            true,
-            object : AppTaskStatusListener {
-                override fun onStatusChanged(
-                    windowingMode: Int,
-                    isSystemBarVisible: Boolean
-                ) {
-                    titleBar.setButtonBackground(CustomTitleBar.Type.MAXIMIZE,if(windowingMode == 5) com.fde.baselib.R.drawable.icon_maximize else com.fde.baselib.R.drawable.icon_exitmaximize)
-                    titleBar.setButtonBackground(CustomTitleBar.Type.FULLSCREEN,if(isSystemBarVisible) com.fde.baselib.R.drawable.icon_fullscreen else com.fde.baselib.R.drawable.icon_exitfullscreen)
-                }
-
-            }
-        )
+//        appTaskController?.initCustomCaption(
+//            WeakReference(this),
+//            true,
+//            object : AppTaskStatusListener {
+//                override fun onStatusChanged(
+//                    windowingMode: Int,
+//                    isSystemBarVisible: Boolean
+//                ) {
+//                    titleBar.setButtonBackground(CustomTitleBar.Type.MAXIMIZE,if(windowingMode == 5) com.fde.baselib.R.drawable.icon_maximize else com.fde.baselib.R.drawable.icon_exitmaximize)
+//                    titleBar.setButtonBackground(CustomTitleBar.Type.FULLSCREEN,if(isSystemBarVisible) com.fde.baselib.R.drawable.icon_fullscreen else com.fde.baselib.R.drawable.icon_exitfullscreen)
+//                }
+//
+//            }
+//        )
 
         test1.setOnClickListener({
             startActivity(Intent(this,GridListActivity::class.java))

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -46,8 +48,10 @@ public class CustomScrollBarView extends View {
         canvas.drawRect(0, 0, getWidth(), getHeight(), trackPaint);
 
         // thumb
-        canvas.drawRoundRect(0, thumbTop, getWidth(),
-                thumbTop + thumbHeight,getWidth(),getWidth(), thumbPaint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            canvas.drawRoundRect(0, thumbTop, getWidth(),
+                    thumbTop + thumbHeight,getWidth(),getWidth(), thumbPaint);
+        }
     }
 
     @Override
@@ -89,6 +93,10 @@ public class CustomScrollBarView extends View {
     }
 
     public void setThumbHeight(float height) {
+        Log.w("CustomScrollBarView","setThumbHeight  "+height);
+        if(height !=0 && height < 20){
+            height = 20;
+        }
         this.thumbHeight = height;
         invalidate();
     }
