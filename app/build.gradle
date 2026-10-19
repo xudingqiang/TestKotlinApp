@@ -1,17 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id 'com.google.devtools.ksp'
 }
 
 android {
     namespace 'com.bella.testapp'
-    compileSdk 35
+    compileSdkVersion 37
 
     defaultConfig {
         applicationId "com.bella.testapp"
         minSdk 30
-        targetSdk 35
+        targetSdk 37
         versionCode 1
         versionName "1.0"
 
@@ -40,6 +40,18 @@ android {
 
 
 
+    // AGP keeps its default debug keystore in ~/.android, which may not be writable in
+    // sandboxed/CI environments, so point debug signing (and the androidTest APK) at a
+    // project-local keystore instead.
+    signingConfigs {
+        debug {
+            storeFile rootProject.file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -47,6 +59,7 @@ android {
         }
         debug {
             debuggable true
+            signingConfig signingConfigs.debug
         }
 
     }
@@ -54,17 +67,27 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = '11'
-    }
+    // AGP 9 built-in Kotlin: kotlin.compilerOptions.jvmTarget defaults to
+    // compileOptions.targetCompatibility, so no explicit jvmTarget is needed.
     buildFeatures {
         compose true
         viewBinding true
+    }
+
+    lint {
+        // 如果是 Lint 检查引起的可以关掉，但 AAR Metadata 报错通常用下面这个打包配置
+    }
+
+    testOptions {
+        // The AppFunctions parameter-serialization test runs on the host JVM, where the
+        // android.os stubs throw by default.
+        unitTests.returnDefaultValues = true
     }
 }
 
 dependencies {
 
+    implementation libs.androidx.activity.ktx
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.activity.compose
@@ -95,4 +118,14 @@ dependencies {
     implementation 'androidx.window:window:1.5.0-alpha01'
     implementation 'androidx.startup:startup-runtime:1.1.1'
 //    implementation "com.google.android.exoplayer:exoplayer:2.19.1"
+
+    // AppFunctions：调用方（本应用）用运行时库构造请求，并用 KSP 生成
+    // @AppFunctionSerializable 参数的序列化工厂。
+    implementation("androidx.appfunctions:appfunctions:1.0.0-alpha10")
+    ksp("androidx.appfunctions:appfunctions-compiler:1.0.0-alpha10")
+
+    // DeepSeek Kotlin SDK
+    implementation("org.oremif:deepseek-kotlin:0.5.0")
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
 }

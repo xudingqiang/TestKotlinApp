@@ -1,0 +1,54 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <!-- 显示器外框 -->
+    <path
+        android:fillColor="#E4E9F1"
+        android:strokeColor="#9DAABD"
+        android:strokeWidth="12"
+        android:pathData="
+            M224,296
+            H800
+            C824,296 848,320 848,344
+            V696
+            C848,720 824,744 800,744
+            H224
+            C200,744 176,720 176,696
+            V344
+            C176,320 200,296 224,296
+            Z" />
+
+    <!-- 屏幕区域 -->
+    <path
+        android:fillColor="#8F9AAF"
+        android:pathData="
+            M342,376
+            H682
+            C694,376 702,384 702,396
+            V596
+            C702,608 694,616 682,616
+            H342
+            C330,616 322,608 322,596
+            V396
+            C322,384 330,376 342,376
+            Z" />
+
+    <!-- 底部支撑块 -->
+    <path
+        android:fillColor="#798398"
+        android:pathData="
+            M424,672
+            H600
+            C612,672 620,680 620,692
+            V716
+            C620,728 612,736 600,736
+            H424
+            C412,736 404,728 404,716
+            V692
+            C404,680 412,672 424,672
+            Z" />
+
+</vector>

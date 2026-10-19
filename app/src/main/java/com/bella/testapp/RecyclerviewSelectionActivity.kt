@@ -3,6 +3,7 @@ package com.bella.testapp
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,11 +20,12 @@ import com.bella.testapp.adapter.SelectionAdapter
 import com.bella.testapp.bean.Item
 import com.bella.testapp.list.MyItemDetailsLookup
 import com.bella.testapp.list.MyItemKeyProvider
+import com.bella.testapp.view.NoMouseScrollRecyclerView
 import com.fde.baselib.view.CustomScrollBarView
 import com.fde.baselib.view.RecyclerScrollBinder
 
 class RecyclerviewSelectionActivity : AppCompatActivity() {
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: NoMouseScrollRecyclerView
     private lateinit var customScrollBarView: CustomScrollBarView
     private lateinit var tracker: SelectionTracker<Long>
     private lateinit var adapter: SelectionAdapter
@@ -41,9 +43,15 @@ class RecyclerviewSelectionActivity : AppCompatActivity() {
             insets
         }
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView = findViewById<NoMouseScrollRecyclerView>(R.id.recyclerView)
         customScrollBarView = findViewById<CustomScrollBarView>(R.id.scrollBar)
 
+        KeyEvent.KEYCODE_BACK
+
+        // The lint check cannot see through the custom RecyclerView subclass / the wrapping
+        // FrameLayout: activity_recyclerview_selection.xml gives this view
+        // layout_height="match_parent", not wrap_content, so setHasFixedSize(true) is safe here.
+        @Suppress("InvalidSetHasFixedSize")
         recyclerView.setHasFixedSize(true);
         val pool = recyclerView.getRecycledViewPool();
         pool.setMaxRecycledViews(0, 200); // 默认是 5，加大到 15~20 避免快速滑动时重新创建 View

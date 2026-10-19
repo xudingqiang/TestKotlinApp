@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<appfunctions>
+    <appfunction>
+        <id>com.bella.funcprovider.BaseDemoAppFunctionService#add</id>
+        <enabledByDefault>true</enabledByDefault>
+        <description>Adds two integers.</description>
+        <parameters>
+            <dataTypeMetadata>
+                <id>unused</id>
+                <isNullable>false</isNullable>
+                <type>7</type>
+            </dataTypeMetadata>
+            <id>unused</id>
+            <isRequired>true</isRequired>
+            <name>a</name>
+            <description>the first addend.</description>
+        </parameters>
+        <parameters>
+            <dataTypeMetadata>
+                <id>unused</id>
+                <isNullable>false</isNullable>
+                <type>7</type>
+            </dataTypeMetadata>
+            <id>unused</id>
+            <isRequired>true</isRequired>
+            <name>b</name>
+            <description>the second addend.</description>
+        </parameters>
+        <response>
+            <id>unused</id>
+            <valueType>
+                <id>unused</id>
+                <isNullable>false</isNullable>
+                <type>7</type>
+            </valueType>
+            <description>the sum of [a] and [b].</description>
+        </response>
+        <functionId>com.bella.funcprovider.BaseDemoAppFunctionService#add</functionId>
+    </appfunction>
+    <appfunction>
+        <id>com.bella.funcprovider.BaseDemoAppFunctionService#openImage</id>
+        <enabledByDefault>true</enabledByDefault>
+        <parameters>
+            <dataTypeMetadata>
+                <id>unused</id>
+                <isNullable>false</isNullable>
+                <type>8</type>
+            </dataTypeMetadata>
+            <id>unused</id>
+            <isRequired>true</isRequired>
+            <name>a</name>
+        </parameters>
+        <parameters>
+            <dataTypeMetadata>
+                <id>unused</id>
+                <isNullable>false</isNullable>
+                <type>8</type>
+            </dataTypeMetadata>
+            <id>unused</id>
+            <isRequired>true</isRequired>
+            <name>b</name>
+        </parameters>
+        <response>
+            <id>unused</id>
+            <valueType>
+                <id>unused</id>
+                <isNullable>false</isNullable>
+                <type>8</type>
+            </valueType>
+        </response>
+        <functionId>com.bella.funcprovider.BaseDemoAppFunctionService#openImage</functionId>
+    </appfunction>
+</appfunctions>

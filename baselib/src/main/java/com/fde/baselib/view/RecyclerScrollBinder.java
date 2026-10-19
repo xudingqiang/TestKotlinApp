@@ -1,9 +1,14 @@
 package com.fde.baselib.view;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.InputDevice;
+import android.view.MotionEvent;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +25,7 @@ public class RecyclerScrollBinder {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private Future<?> currentScrollTask = null;
 
+    int position;
     private  float mPendingProgress;
     private  boolean mPosted;
 
@@ -32,6 +38,80 @@ public class RecyclerScrollBinder {
     public  void bind(RecyclerView rv, CustomScrollBarView bar) {
 
         LinearLayoutManager lm = (LinearLayoutManager) rv.getLayoutManager();
+
+//        rv.suppressLayout(true);
+
+//        bar.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+//            @Override
+//            public boolean onGenericMotion(View v, MotionEvent event) {
+//                return false;
+//            }
+//        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+
+//            rv.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+//
+//              @Override
+//              public boolean onGenericMotion(View v, MotionEvent event) {
+//                  return true;
+//              }
+//          });
+
+//            bar.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+//                @Override
+//                public boolean onGenericMotion(View v, MotionEvent event) {
+//
+//                    if (event.getAction() == MotionEvent.ACTION_SCROLL &&
+//                            event.isFromSource(InputDevice.SOURCE_MOUSE)) {
+//                        int itemCount = rv.getAdapter() == null ?  0 : rv.getAdapter().getItemCount();
+//
+//                        float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+//
+//                        int range = rv.computeVerticalScrollRange();
+//                        int offset = rv.computeVerticalScrollOffset();
+//                        int extent = rv.computeVerticalScrollExtent();
+//
+//                        int maxScrollRange = range - extent;
+////                    if (maxScrollRange <= 0 || range <= 0)
+//
+//                        // 在子线程完成所有数学运算
+//                        float progress = offset * 1f / maxScrollRange;
+//                        float thumbHeight = extent * 1f / range * bar.getHeight();
+//
+//                        Log.w("TAG","onGenericMotion  "+event.getAction()  + " "+event.getY() + ",vScroll "+vScroll  + ",itemCount "+itemCount);
+////
+//                        if(vScroll > 0){
+//                            position -= 50;
+//                        }else {
+//                            position += 50;
+//                        }
+//
+//                        if(position < 0){
+//                            position = 0;
+//                        }
+////
+//                        mExecutor.execute(() -> {
+//                            // Compute metrics (Note: RV methods should ideally be read carefully or cached if possible)
+//
+//                            mRecyclerScrollingByBar = true;
+//                            // Post ONLY the UI update back to the main thread
+//                            rv.post(() -> {
+//                                bar.setThumbHeight(thumbHeight);
+//                                bar.setProgress(progress);
+//                                lm.scrollToPositionWithOffset(
+//                                        position,
+//                                        0
+//                                );
+//
+//                            });
+//                        });
+//                        return true;
+//                    }
+//                        return false;
+//                }
+//            });
+        }
 
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

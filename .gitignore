@@ -17,3 +17,11 @@
 local.properties
 *.txt
 .idea/
+
+# Sandbox/CI build support: workspace-local Gradle home, Gradle distribution, AVD home and the
+# project-local debug keystore (used where ~/.gradle and ~/.android are not writable).
+/gradle-home/
+/gradle-dist/
+/.android-home/
+/debug.keystore
+/.scratch/

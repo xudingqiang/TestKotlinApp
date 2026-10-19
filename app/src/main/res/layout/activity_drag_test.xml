@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- 源组件：可被拖拽 -->
+    <TextView
+        android:id="@+id/tvSource"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="#FF5722"
+        android:gravity="center"
+        android:text="拖我到下面"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <!-- 目标组件：接收拖拽的容器 -->
+    <LinearLayout
+        android:id="@+id/layoutTarget"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#E0E0E0"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="把组件拖放到这里"
+            android:textColor="#757575" />
+    </LinearLayout>
+
+</LinearLayout>

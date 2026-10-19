@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.devtools.ksp'
+}
+
+android {
+    namespace 'com.bella.funcprovider'
+    compileSdk 37
+
+    defaultConfig {
+        applicationId "com.bella.funcprovider"
+        minSdk 30
+        targetSdk 37
+        versionCode 1
+        versionName "1.0"
+    }
+
+    // The sandbox / CI environment may not have a writable ~/.android, where AGP keeps its
+    // default debug keystore, so use a project-local debug keystore instead.
+    signingConfigs {
+        debug {
+            storeFile rootProject.file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // AppFunctions runtime + the KSP compiler that generates the concrete
+    // AppFunctionService subclass and its schema XML asset.
+    implementation 'androidx.appfunctions:appfunctions:1.0.0-alpha10'
+    ksp 'androidx.appfunctions:appfunctions-compiler:1.0.0-alpha10'
+
+    // The KSP-generated service uses kotlinx.coroutines (CoroutineScope, SupervisorJob, ...).
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
+
+    // Used by the (tiny) launcher activity.
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+}

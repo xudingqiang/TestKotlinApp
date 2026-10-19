@@ -1,6 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    // AGP 9 has built-in Kotlin support and pins KGP to 2.2.10. The app depends on
+    // org.oremif:deepseek-kotlin:0.5.0, which requires kotlin-stdlib 2.4.20, so KGP
+    // (and the matching Compose compiler plugin) must be upgraded as well.
+    // https://developer.android.com/build/releases/agp-9-0-0-release-notes
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20"
+        classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.4.20"
+        classpath "com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.10"
+
+    }
+}
+
 plugins {
-alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }

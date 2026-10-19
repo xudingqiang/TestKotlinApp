@@ -1,13 +1,14 @@
 package com.bella.testapp
 
-import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.StateListDrawable
 import android.net.Uri
 import android.openfde.AppTaskControllerProxy
-import android.openfde.AppTaskStatusListener
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -17,23 +18,28 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowInsetsController
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ListPopupWindow
-import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.text.font.FontVariation
-import androidx.core.app.ActivityCompat
+import androidx.appfunctions.AppFunctionData
+import androidx.appfunctions.AppFunctionSearchSpec
+import androidx.appfunctions.ExecuteAppFunctionRequest
+import androidx.appfunctions.metadata.AppFunctionMetadata
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.fde.baselib.Animation.AnimDrawablePlayer
-import com.fde.baselib.Animation.AnimFactory
 import com.fde.baselib.view.CustomTitleBar
-import java.lang.ref.WeakReference
+import org.oremif.deepseek.models.FunctionRequest
+import org.oremif.deepseek.models.Tool
+import org.oremif.deepseek.models.ToolCallType
 
 class MainActivity : AppCompatActivity() {
     lateinit var test1: TextView;
@@ -42,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var test4: TextView;
     lateinit var test5: TextView;
     lateinit var test6: TextView;
+    lateinit var test7: TextView;
     lateinit var editTest: EditText;
     lateinit var titleBar: CustomTitleBar;
     lateinit var imgLoading: ImageView;
@@ -51,12 +58,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var context : Context
 
 
+    private lateinit var root: TextView
+    private lateinit var captionBar: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         context = this
 //        appTaskController = AppTaskControllerProxy.create();
+
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -85,24 +97,138 @@ class MainActivity : AppCompatActivity() {
 
         initView();
         initEvent();
+        initAgentDemoView();
+        initAgentDemoEvent();
         checkMultiWindowMode()
     }
 
+
+    fun updateFullscreenInnerColor(
+        view: View,
+        hoverColor: Int,
+        pressedColor: Int,
+        normalColor: Int
+    ) {
+        try {
+            val layerDrawable = view.background.mutate() as? LayerDrawable
+                ?: return
+
+            val innerDrawable = layerDrawable
+                .findDrawableByLayerId(R.id.fullscreen_inner_bg)
+                .mutate() as? StateListDrawable
+                ?: return
+
+            // 遍历 selector 中的各个状态背景
+            for (i in 0 until innerDrawable.stateCount) {
+                val drawable = innerDrawable.getStateDrawable(i)
+                    ?: continue
+
+                when (i) {
+                    0 -> drawable.setTint(hoverColor)
+                    1 -> drawable.setTint(pressedColor)
+                    else -> drawable.setTint(normalColor)
+                }
+            }
+
+            view.background = layerDrawable
+        }catch (e : Exception){
+            e.printStackTrace()
+        }
+    }
+
     fun initView() {
+
         test1 = findViewById(R.id.test1);
         test2 = findViewById(R.id.test2);
         test3 = findViewById(R.id.test3);
         test4 = findViewById(R.id.test4);
         test5 = findViewById(R.id.test5);
         test6 = findViewById(R.id.test6);
+        test7 = findViewById(R.id.test7);
         editTest = findViewById(R.id.editTest);
         imgLoading = findViewById(R.id.imgLoading);
+
+        val test9 = findViewById<TextView>(R.id.test9);
+        test9.setOnClickListener {
+
+        }
+
+
+//        val layerDrawable = test9.background.mutate() as LayerDrawable
+//        val innerDrawable = layerDrawable
+//            .findDrawableByLayerId(R.id.fullscreen_inner_bg)
+//            .mutate() as GradientDrawable
+//
+//        innerDrawable.setColor(Color.parseColor("#FF0000"))
+//
+//        test9.background = layerDrawable
+
+        updateFullscreenInnerColor(
+            view = test9,
+            hoverColor = Color.parseColor("#FF0000"),
+            pressedColor = Color.parseColor("#77757F"),
+            normalColor = Color.parseColor("#B2B0BB")
+        )
+
+
+        val strokeColor = Color.parseColor("#FF00FF")
+        val backgroundColor = Color.parseColor("#0000FF")
+
+        val outSize = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 6f * 1
+            setColor(strokeColor)
+            setStroke(
+                0,
+                strokeColor
+            )
+        }
+
+        val layerDrawable = test9.background.mutate() as? LayerDrawable
+            ?: return
+
+        layerDrawable.setDrawableByLayerId(
+                    R.id.fullscreen_outsize,
+                    outSize.mutate()
+                )
+
+
+        val inSize = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 6f * 1
+            setColor(backgroundColor)
+            setStroke(
+                0,
+                backgroundColor
+            )
+        }
+
+        layerDrawable.setDrawableByLayerId(
+            R.id.fullscreen_second,
+            inSize.mutate()
+        )
+
+//        layerDrawable.setDrawableByLayerId(
+//            R.id.fullscreen_inner_icon,
+//            inSize.mutate()
+//        )
+
+        test9.background = layerDrawable
+
+//        var layerDrawable =  getResources().getDrawable(R.drawable.desktop_mode_layout_menu_fullscreen_button_background);
+//        val innerDrawable = GradientDrawable()
+//        innerDrawable.shape = GradientDrawable.RECTANGLE
+//        innerDrawable.cornerRadii = floatArrayOf(10f, 10f, 10f, 10f, 0f, 0f, 0f, 0f)
+//        innerDrawable.setColor(Color.parseColor("#FF0000"));
+//        test9.setBackground(layerDrawable);
 
         test1.setText("鼠标Grid选中效果")
         test2.setText("鼠标List选中效果")
         test3.setText("RecyclerviewSelection效果")
         test4.setText("ImageViewTest")
         test5.setText("JniTest")
+        test6.setText("DragTest")
+        test7.setText("标题栏测试")
 
 //        animDrawablePlayer = AnimFactory.loading(this, imgLoading)
 //        animDrawablePlayer.start()
@@ -249,12 +375,18 @@ class MainActivity : AppCompatActivity() {
 //            startActivityForResult(intent, 1)
         })
 
-        test6.setText("获取焦点")
-        test6.isFocusable = true
-        test6.isFocusableInTouchMode = true
+//        test6.setText("获取焦点")
+//        test6.isFocusable = true
+//        test6.isFocusableInTouchMode = true
         test6.setOnClickListener({
-            test6.requestFocus();
+//            test6.requestFocus();
+            startActivity(Intent(this, DragTestActivity::class.java))
 
+        })
+
+
+        test7.setOnClickListener({
+            startActivity(Intent(this, TitleBarTestActivity::class.java))
         })
     }
 
@@ -267,7 +399,45 @@ class MainActivity : AppCompatActivity() {
         super.onMultiWindowModeChanged(isInMultiWindowMode)
         Log.d("SplitScreen", "onMultiWindowModeChanged: $isInMultiWindowMode")
     }
-
+//
+//    fun buildDeepSeekTool(metadata: AppFunctionMetadata): Tool {
+//        return Tool(
+//            type = ToolCallType.FUNCTION,
+//            function = FunctionRequest(
+//                name = metadata.functionIdentifier, // 函数的唯一标识符
+//                description = metadata.description, // 来自 KDoc
+//                parameters = buildJsonSchema(metadata.parameters)
+//            )
+//        )
+//    }
+//
+//    suspend fun executeAppFunction(
+//        functionIdentifier: String,
+//        argumentsJson: String
+//    ): String {
+//        val appFunctionManager = AppFunctionManagerCompat.getInstance(context)
+//
+//        // 查询函数元数据
+//        val metadata = appFunctionManager.observeAppFunctions(
+//            AppFunctionSearchSpec(
+//                packageNames = listOf(context.packageName),
+//                schemaName = "my_app_function_service"
+//            )
+//        ).first().first().appFunctions
+//            .first { it.functionIdentifier == functionIdentifier }
+//
+//        // 将 JSON 参数转换为 AppFunctionData
+//        val paramsData = AppFunctionData.fromJson(argumentsJson, metadata.parameters)
+//
+//        // 构建并执行请求
+//        val request = ExecuteAppFunctionRequest.Builder()
+//            .setAppFunctionMetadata(metadata)
+//            .setParameters(paramsData)
+//            .build()
+//
+//        val response = appFunctionManager.executeAppFunction(request).await()
+//        return response.result.toString()
+//    }
 
 
 }

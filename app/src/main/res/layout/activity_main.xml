@@ -27,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|left"
-
             app:layout_constraintTop_toBottomOf="@id/customTitleBar"
             />
 
@@ -92,6 +91,16 @@
         android:layout_height="wrap_content"/>
 
 
+    <TextView
+        android:id="@+id/test9"
+        android:layout_width="108dp"
+        android:layout_margin="32dp"
+        android:background="@drawable/desktop_mode_layout_menu_fullscreen_button_background"
+        app:layout_constraintTop_toBottomOf="@id/test8"
+        android:layout_height="52dp"/>
+
+
+
     <ImageView
         android:id="@+id/imgLoading"
         android:layout_width="wrap_content"
@@ -100,6 +109,63 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/test8"
         android:layout_height="wrap_content"/>
+
+    <!-- ================= DeepSeek + AppFunctions demo ================= -->
+
+    <EditText
+        android:id="@+id/editDeepSeekKey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
+        android:hint="DeepSeek API Key (sk-...)"
+        android:inputType="textPassword"
+        android:textSize="14sp"
+        android:text="sk-3f6a5973c15e4ad79a020b3bd44150eb"
+        app:layout_constraintTop_toBottomOf="@id/imgLoading" />
+
+    <EditText
+        android:id="@+id/editAgentPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="对智能体说点什么，例如：帮我算一下 12 加 30"
+        android:inputType="text"
+        android:text="打开/mnt/sdcard/Pictures/ 的aa.png图片预览"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/editDeepSeekKey" />
+
+    <Button
+        android:id="@+id/btnRunAgent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="运行智能体"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editAgentPrompt" />
+
+    <Button
+        android:id="@+id/btnOpenProvider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="查看提供方应用"
+        app:layout_constraintStart_toEndOf="@id/btnRunAgent"
+        app:layout_constraintTop_toBottomOf="@id/editAgentPrompt" />
+
+    <TextView
+        android:id="@+id/tvAgentLog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="#11000000"
+        android:fontFamily="monospace"
+        android:padding="8dp"
+        android:text="等待运行…"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/btnRunAgent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

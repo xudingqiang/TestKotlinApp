@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root"
+    android:background="#f2f2f2"
+    android:focusable="true"
+    android:descendantFocusability="beforeDescendants">
+
+    <!-- 自定义 CaptionBar -->
+
+    <LinearLayout
+        android:id="@+id/caption_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#202124"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="72dp"
+            android:layout_marginRight="160dp"
+            android:background="#ff0"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- App 内容 -->
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Desktop Mode Content"
+            android:textSize="24sp" />
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

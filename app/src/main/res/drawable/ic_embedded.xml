@@ -1,0 +1,90 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+
+    <!-- 外部圆角边框 -->
+    <path
+        android:fillColor="#E4E9F1"
+        android:strokeColor="#9DAABD"
+        android:strokeWidth="12"
+        android:pathData="
+            M224,296
+            H800
+            C824,296 848,320 848,344
+            V696
+            C848,720 824,744 800,744
+            H224
+            C200,744 176,720 176,696
+            V344
+            C176,320 200,296 224,296
+            Z" />
+
+    <!-- 内部双面板 -->
+    <path
+        android:fillColor="#8F9AAF"
+        android:pathData="
+            M264,380
+            H500
+            C512,380 520,388 520,400
+            V636
+            C520,648 512,656 500,656
+            H264
+            C232,656 224,648 224,636
+            V400
+            C244,388 232,380 244,380
+            Z" />
+
+
+    <path
+        android:fillColor="#8F9AAF"
+        android:pathData="
+            M524,380
+            H780
+            C792,380 800,388 800,400
+            V636
+            C800,648 792,656 780,656
+            H524
+            C512,656 504,648 504,636
+            V400
+            C504,388 512,380 524,380
+            Z" />
+
+    <!-- 双面板顶部深色标题栏 -->
+    <path
+        android:fillColor="#798398"
+        android:pathData="
+            M244,380
+            H500
+            C512,380 520,388 520,400
+            V416
+            H224
+            V400
+            C224,388 232,380 244,380
+            Z" />
+
+    <path
+        android:fillColor="#798398"
+        android:pathData="
+            M524,380
+            H780
+            C792,380 800,388 800,400
+            V416
+            H504
+            V400
+            C504,388 512,380 524,380
+            Z" />
+
+    <!-- 中间白色分隔线 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M503,470
+            H505
+            V562
+            H503
+            Z" />
+
+</vector>

@@ -1,6 +1,7 @@
 package com.fde.baselib.view
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,10 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.annotation.RequiresApi
 import com.fde.baselib.R
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class CustomTitleBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
