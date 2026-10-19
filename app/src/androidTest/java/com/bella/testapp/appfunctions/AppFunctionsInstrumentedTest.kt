@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 /**
  * Device-side checks for the AppFunctions half of the DeepSeek agent demo.
  *
- * Requires the target app to be installed:
- * `./gw.sh :funcprovider:installDebug` (or run the `funcprovider` run configuration first).
+ * The target app (`com.fde.gallery3d`) ships on the FDE image. On other images
+ * [galleryIsInstalled] fails with an explicit message instead of a confusing wrapper error.
  *
  * Note on the privileged permission: executing a function owned by *another* package needs
  * `android.permission.EXECUTE_APP_FUNCTIONS`, which on Android 17+ is a known-signer permission.
- * [crossAppAdd_executesTheProviderFunction] therefore asserts on the shape of the outcome and
- * reports what the platform answered, instead of failing a normal third-party install.
+ * [openImage_callsTheGalleryAppFunction] therefore accepts either a real success or a readable
+ * platform error, and reports which one happened instead of failing a normal third-party install.
  */
 @RunWith(AndroidJUnit4::class)
 class AppFunctionsInstrumentedTest {
@@ -26,47 +26,60 @@ class AppFunctionsInstrumentedTest {
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
-    fun addParameters_roundTripsThroughGeneratedFactory() {
-        val parameters = AddParameters(a = 12, b = 30)
+    fun openImageParameters_roundTripsThroughGeneratedFactory() {
+        val parameters = OpenImageParameters(
+            path = "/mnt/sdcard/Pictures/aa.png",
+            title = "aa",
+        )
 
-        val data = AppFunctionData.serialize(parameters, AddParameters::class.java)
+        val data = AppFunctionData.serialize(parameters, OpenImageParameters::class.java)
 
-        assertEquals("com.bella.testapp.appfunctions.AddParameters", data.qualifiedName)
-        assertEquals(12, data.getInt("a"))
-        assertEquals(30, data.getInt("b"))
-        assertEquals(parameters, data.deserialize(AddParameters::class.java))
+        assertEquals("com.bella.testapp.appfunctions.OpenImageParameters", data.qualifiedName)
+        assertEquals("/mnt/sdcard/Pictures/aa.png", data.getString("path"))
+        assertEquals("aa", data.getString("title"))
+        assertEquals(parameters, data.deserialize(OpenImageParameters::class.java))
     }
 
     @Test
-    fun providerPackage_isInstalled() {
-        val packageManager = context.packageManager
-        val installed = packageManager.getInstalledPackages(0)
-            .any { it.packageName == AppFunctionsClient.PROVIDER_PACKAGE }
+    fun galleryIsInstalled() {
+        val installed = context.packageManager.getInstalledPackages(0)
+            .any { it.packageName == GalleryAppFunctionsClient.GALLERY_PACKAGE }
         assertTrue(
-            "目标应用 ${AppFunctionsClient.PROVIDER_PACKAGE} 未安装；请先执行 " +
-                "./gw.sh :funcprovider:installDebug",
+            "目标应用 ${GalleryAppFunctionsClient.GALLERY_PACKAGE} 未安装（该应用随 FDE 镜像提供）",
             installed,
         )
     }
 
     @Test
-    fun crossAppAdd_executesTheProviderFunction() = runBlocking {
-        val client = AppFunctionsClient(context)
-        val result = client.callAdd(12, 30)
+    fun openImage_callsTheGalleryAppFunction(): Unit = runBlocking {
+        val client = GalleryAppFunctionsClient(context)
+        val result = client.openImage(
+            path = GalleryAppFunctionsClient.DEFAULT_IMAGE_PATH,
+            title = "aa",
+        )
+
+        // Always surface the platform's answer in logcat so the exact rejection reason is visible.
+        android.util.Log.i(TAG, "openImage -> $result")
 
         when (result) {
-            is AgentFunctionResult.Success -> {
-                assertEquals("12 + 30 = 42", result.displayText)
-            }
+            is AgentFunctionResult.Success -> assertEquals("ok", result.raw)
 
             is AgentFunctionResult.Failure -> {
-                // A normal third-party install is not granted EXECUTE_APP_FUNCTIONS, so a clear
-                // platform error is an expected, informative outcome rather than a test bug.
+                // The wiring is what this test verifies when the install is not privileged. A
+                // privileged (system-signed / allowlisted) build reaches Success above.
                 assertTrue(
-                    "调用失败应给出可读原因，实际为: ${result.displayText}",
-                    result.displayText.isNotBlank(),
+                    "失败必须带可读原因，实际为: ${result.displayText}",
+                    result.displayText.trim().length > 10,
+                )
+                android.util.Log.i(
+                    TAG,
+                    "跨应用调用被平台拒绝（预期于普通安装）: ${result.displayText}",
                 )
             }
         }
+    }
+
+    private companion object {
+        const val TAG = "AppFunctionsTest"
     }
 }

@@ -346,10 +346,14 @@ class MainActivity : AppCompatActivity() {
 //        )
 
         test1.setOnClickListener({
-            startActivity(Intent(this,GridListActivity::class.java))
+//            startActivity(Intent(this,GridListActivity::class.java))
 //            val intent =  Intent(Intent.ACTION_PICK);
 //            intent.setType("image/*");
 //            startActivity( intent);
+
+            val intent = Intent(Settings.ACTION_DISPLAY_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         })
 
         test2.setOnClickListener({

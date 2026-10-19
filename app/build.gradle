@@ -85,6 +85,13 @@ android {
     }
 }
 
+ksp {
+    // Generate androidx.appfunctions.internal.$AggregatedAppFunctionInventory_Impl (and the other
+    // aggregated components). Without this the appfunctions runtime cannot resolve any function
+    // metadata, so AppFunctionManager.executeAppFunction fails before reaching the target app.
+    arg("appfunctions:aggregateAppFunctions", "true")
+}
+
 dependencies {
 
     implementation libs.androidx.activity.ktx
@@ -128,4 +135,5 @@ dependencies {
     implementation("org.oremif:deepseek-kotlin:0.5.0")
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
+
 }

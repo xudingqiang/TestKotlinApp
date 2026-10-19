@@ -1,7 +1,9 @@
 package com.bella.testapp
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -9,8 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.bella.testapp.appfunctions.AgentRunResult
-import com.bella.testapp.appfunctions.AppFunctionsClient
 import com.bella.testapp.appfunctions.DeepSeekAgent
+import com.bella.testapp.appfunctions.GalleryAppFunctionsClient
 import kotlinx.coroutines.launch
 
 /**
@@ -18,9 +20,9 @@ import kotlinx.coroutines.launch
  *
  * The demo shows the two halves of an on-device agent flow:
  *  - **DeepSeek** turns a natural-language request into a tool call (function calling).
- *  - **AppFunctions** (`android.app.appfunctions`) executes the requested function, which here lives
- *    in a *different* app (`com.bella.funcprovider`) - so the call genuinely crosses a package
- *    boundary instead of running locally.
+ *  - **AppFunctions** (`android.app.appfunctions`) executes the requested function, which lives in
+ *    a *different* app — here the gallery (`com.fde.gallery3d`), function `openImage(path, title)` —
+ *    so the call genuinely crosses a package boundary.
  *
  * Everything lives in this file (and the `appfunctions` package) so the demo can be deleted again
  * without touching the rest of [MainActivity].
@@ -29,20 +31,26 @@ import kotlinx.coroutines.launch
 /** DeepSeek API keys look like `sk-...`; kept as a soft check so demos stay easy to run. */
 private const val DEEPSEEK_KEY_PREFIX = "sk-"
 
+private const val TAG = "AgentDemo"
+
 /** Views owned by the demo section at the bottom of `activity_main.xml`. */
 private class AgentDemoViews(
     val keyInput: EditText,
     val promptInput: EditText,
+    val imagePathInput: EditText,
     val runButton: Button,
-    val openProviderButton: Button,
+    val openGalleryButton: Button,
+    val grantButton: Button,
     val logView: TextView,
 )
 
 private fun MainActivity.bindAgentDemoViews(): AgentDemoViews = AgentDemoViews(
     keyInput = findViewById(R.id.editDeepSeekKey),
     promptInput = findViewById(R.id.editAgentPrompt),
+    imagePathInput = findViewById(R.id.editImagePath),
     runButton = findViewById(R.id.btnRunAgent),
-    openProviderButton = findViewById(R.id.btnOpenProvider),
+    openGalleryButton = findViewById(R.id.btnOpenGallery),
+    grantButton = findViewById(R.id.btnGrantFunctionPermission),
     logView = findViewById(R.id.tvAgentLog),
 )
 
@@ -51,14 +59,19 @@ private fun MainActivity.bindAgentDemoViews(): AgentDemoViews = AgentDemoViews(
  */
 internal fun MainActivity.initAgentDemoView() {
     val views = bindAgentDemoViews()
-    val supported = AppFunctionsClient(this).isSupported
+    val client = GalleryAppFunctionsClient(this)
     views.logView.text = buildString {
-        append("AppFunctions 可用: ")
-        append(if (supported) "是" else "否")
-        append("（API ${Build.VERSION.SDK_INT}）\n")
-        append("提供方应用: ${AppFunctionsClient.PROVIDER_PACKAGE}\n")
-        append("函数: ${AppFunctionsClient.FUNC_ADD}\n\n")
-        append("填入 DeepSeek API Key 后点击“运行智能体”。")
+        append("API ${Build.VERSION.SDK_INT} | AppFunctions 可用: ")
+        append(if (client.isSupported) "是" else "否")
+        append('\n')
+        append("目标应用: ${GalleryAppFunctionsClient.GALLERY_PACKAGE}\n")
+        append("目标函数: ${GalleryAppFunctionsClient.FUNC_OPEN_IMAGE}(path, title)\n")
+        append("EXECUTE_APP_FUNCTIONS: ")
+        append(if (client.hasExecutePermission()) "已授予" else "未授予")
+        append("\n\n填入 DeepSeek API Key 后点击“运行智能体”。")
+    }
+    if (!client.hasExecutePermission()) {
+        views.grantButton.visibility = android.view.View.VISIBLE
     }
 }
 
@@ -68,22 +81,35 @@ internal fun MainActivity.initAgentDemoView() {
 internal fun MainActivity.initAgentDemoEvent() {
     val views = bindAgentDemoViews()
 
-    views.runButton.setOnClickListener {
-        runDeepSeekAgent(views)
+    views.runButton.setOnClickListener { runDeepSeekAgent(views) }
+
+    views.openGalleryButton.setOnClickListener {
+        launchPackageOrWarn(GalleryAppFunctionsClient.GALLERY_PACKAGE)
     }
 
-    views.openProviderButton.setOnClickListener {
-        val intent = packageManager.getLaunchIntentForPackage("com.fde.gallery3d")
-        if (intent == null) {
-            Toast.makeText(
-                this,
-                "未安装 ${AppFunctionsClient.PROVIDER_PACKAGE}，" +
-                    "请先执行 ./gw.sh :funcprovider:installDebug",
-                Toast.LENGTH_LONG,
-            ).show()
-        } else {
-            startActivity(intent)
-        }
+    // EXECUTE_APP_FUNCTIONS is a privileged/known-signer permission, so it cannot be requested at
+    // runtime. The button only opens the per-app screen where a privileged build can be granted.
+    views.grantButton.setOnClickListener {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.parse("package:$packageName"),
+        )
+        runCatching { startActivity(intent) }
+        Toast.makeText(
+            this,
+            "EXECUTE_APP_FUNCTIONS 是特权权限，需要系统签名或 allowlist 才能授予；" +
+                "普通安装无法在设置里打开它。",
+            Toast.LENGTH_LONG,
+        ).show()
+    }
+}
+
+private fun MainActivity.launchPackageOrWarn(pkg: String) {
+    val intent = packageManager.getLaunchIntentForPackage(pkg)
+    if (intent == null) {
+        Toast.makeText(this, "未安装 $pkg", Toast.LENGTH_LONG).show()
+    } else {
+        startActivity(intent)
     }
 }
 
@@ -94,6 +120,7 @@ internal fun MainActivity.initAgentDemoEvent() {
 private fun MainActivity.runDeepSeekAgent(views: AgentDemoViews) {
     val apiKey = views.keyInput.text?.toString()?.trim().orEmpty()
     val prompt = views.promptInput.text?.toString()?.trim().orEmpty()
+    val imagePath = views.imagePathInput.text?.toString()?.trim().orEmpty()
 
     if (apiKey.isEmpty()) {
         Toast.makeText(this, "请先填写 DeepSeek API Key", Toast.LENGTH_SHORT).show()
@@ -125,7 +152,13 @@ private fun MainActivity.runDeepSeekAgent(views: AgentDemoViews) {
         )
         try {
             log("用户: $prompt")
-            when (val result = agent.run(prompt)) {
+            if (imagePath.isNotEmpty()) log("指定图片路径: $imagePath")
+            when (
+                val result = agent.run(
+                    prompt = prompt,
+                    fallbackPath = imagePath.ifEmpty { null },
+                )
+            ) {
                 is AgentRunResult.Answered -> {
                     log("")
                     log("最终回答: ${result.text}")
@@ -144,5 +177,3 @@ private fun MainActivity.runDeepSeekAgent(views: AgentDemoViews) {
         }
     }
 }
-
-private const val TAG = "AgentDemo"

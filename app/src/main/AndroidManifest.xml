@@ -48,6 +48,24 @@
             android:name="android.window.PROPERTY_ACTIVITY_EMBEDDING_SPLITS_ENABLED"
             android:value="true" />
 
+
+
+        <service
+            android:name="com.bella.testapp.appfunctions.DemoAppFunctionService"
+            android:exported="true"
+            tools:targetApi="36"
+            android:permission="android.permission.BIND_APP_FUNCTION_SERVICE">
+
+            <property
+                android:name="android.app.appfunctions"
+                android:value="app_functions_service.xml" />
+
+            <intent-filter>
+                <action
+                    android:name="android.app.appfunctions.AppFunctionService" />
+            </intent-filter>
+        </service>
+
         <!-- Applies res/xml/main_split_config.xml on startup (androidx.startup). -->
         <provider
             android:name="androidx.startup.InitializationProvider"

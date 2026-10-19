@@ -126,16 +126,28 @@
         app:layout_constraintTop_toBottomOf="@id/imgLoading" />
 
     <EditText
+        android:id="@+id/editImagePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="/mnt/sdcard/Pictures/aa.png"
+        android:inputType="text"
+        android:text="/mnt/sdcard/Pictures/aa.png"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/editDeepSeekKey" />
+
+    <EditText
         android:id="@+id/editAgentPrompt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="对智能体说点什么，例如：帮我算一下 12 加 30"
+        android:hint="对智能体说点什么，例如：帮我打开这张图片"
         android:inputType="text"
-        android:text="打开/mnt/sdcard/Pictures/ 的aa.png图片预览"
+        android:text="打开 /mnt/sdcard/Pictures/aa.png 这张图片预览"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/editDeepSeekKey" />
+        app:layout_constraintTop_toBottomOf="@id/editImagePath" />
 
     <Button
         android:id="@+id/btnRunAgent"
@@ -147,12 +159,22 @@
         app:layout_constraintTop_toBottomOf="@id/editAgentPrompt" />
 
     <Button
-        android:id="@+id/btnOpenProvider"
+        android:id="@+id/btnOpenGallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="查看提供方应用"
+        android:text="打开相册"
         app:layout_constraintStart_toEndOf="@id/btnRunAgent"
+        app:layout_constraintTop_toBottomOf="@id/editAgentPrompt" />
+
+    <Button
+        android:id="@+id/btnGrantFunctionPermission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="权限说明"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/btnOpenGallery"
         app:layout_constraintTop_toBottomOf="@id/editAgentPrompt" />
 
     <TextView
